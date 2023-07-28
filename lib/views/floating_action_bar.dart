@@ -7,15 +7,22 @@ class FloatingActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          createButton(SessionType.joint)
-        ],
+    List<ButtonStyleButton> btns = [];
+    SessionType.values.forEach((type) {
+      btns.add(createButton(type));
+    });
+    return Align(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(color: Color.fromRGBO(0, 0, 0, .2), offset: Offset(5, 5), blurRadius: 10)
+          ]
+        ),
+        child: Wrap(
+            children: btns
+        )
       )
     );
   }
@@ -28,7 +35,7 @@ class FloatingActionBar extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(32.0), // Set the border radius of the button
           ),
-          side: const BorderSide(width: 0, color: Colors.transparent), // Set the border properties
+          //side: const BorderSide(width: 0, color: Colors.transparent), // Set the border properties
         ),
         child: SvgPicture.asset(
           'icons/joint-hollow.svg',

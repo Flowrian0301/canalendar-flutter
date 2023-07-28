@@ -48,7 +48,7 @@ class SaveData {
       File file = File(path);
       if (file.existsSync()) {
         String jsonString = file.readAsStringSync();
-        _instance = SaveData.fromJson(json.decode(jsonString));
+        //_instance = SaveData.fromJson(json.decode(jsonString));
       } else {
         _instance = SaveData();
       }
@@ -81,9 +81,9 @@ class SaveData {
     };
   }
 
-  factory SaveData.fromJson(Map<String, dynamic> json) {
+  /*factory SaveData.fromJson(Map<String, dynamic> json) {
     return SaveData()
       ..currentUserIndex = json['currentUserIndex']
       ..users = (json['users'] as List<dynamic>).map((userData) => User.fromJson(userData)).toList();
-  }
+  }*/
 }
