@@ -1,59 +1,78 @@
 import 'package:canalendar/models/session.dart';
+import 'package:canalendar/utils/date_time_util.dart';
 import 'package:flutter/material.dart';
 
 class CalendarCell extends StatefulWidget implements Comparable<CalendarCell> {
-  final DateTime date;
-  final bool lineDisplay;
-  final List<Session> sessions;
-  final Function()? onClick;
+  ValueNotifier<DateTime> date;
+  ValueNotifier<bool> selected = ValueNotifier<bool>(false);
+  static bool lineDisplay = true;
+  List<Session> sessions;
+  Function(DateTime date) onClickedCallback;
 
-  CalendarCell(this.date, {this.lineDisplay = true, this.onClick})
-      : sessions = [],
-        super();
+  CalendarCell(DateTime date, this.onClickedCallback, {super.key})
+      : sessions = [], date = ValueNotifier<DateTime>(date);
+
+  void setSelected(bool isSelected) {
+    selected.value = isSelected;
+  }
+
+  void _clicked() {
+    onClickedCallback(date.value);
+  }
 
   @override
   _CalendarCellState createState() => _CalendarCellState();
 
-  void setDisplayType(bool line) {
-    // Implement the setDisplayType method here
-  }
-
-  void updateDisplay() {
-    // Implement the updateDisplay method here
-  }
-
-  void redrawIndicator() {
-    // Implement the redrawIndicator method here
-  }
-
-  void updateIndicator(bool selected) {
-    // Implement the updateIndicator method here
-  }
 
   @override
   int compareTo(CalendarCell other) {
-    return date.compareTo(other.date);
+    return date.value.compareTo(other.date.value);
   }
 }
 
 class _CalendarCellState extends State<CalendarCell> {
+  _CalendarCellState();
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onClick,
-      child: widget.lineDisplay ? buildLineCell() : buildCircleCell(),
-    );
-  }
-
-  Widget buildLineCell() {
-    return Container(
-      // Implement the layout for line cell here
-    );
-  }
-
-  Widget buildCircleCell() {
-    return Container(
-      // Implement the layout for circle cell here
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => widget._clicked(),
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: ValueListenableBuilder<bool>(
+            valueListenable: widget.selected,
+            builder: (context, isSelected, child) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: widget.selected.value ? Colors.lightGreen : Colors.transparent,
+                  boxShadow: [
+                    BoxShadow(
+                      color: DateTimeUtil.isSameDay(widget.date.value, DateTime.now())
+                        ? Colors.green
+                        : Colors.transparent,
+                      spreadRadius: 2
+                    )
+                  ]
+                ),
+                child: Column(
+                  children: [
+                    ValueListenableBuilder<DateTime>(
+                      valueListenable: widget.date,
+                      builder: (context, date, child) {
+                        return Text(
+                          date.day.toString(),
+                          textAlign: TextAlign.center
+                        );
+                      }
+                    )
+                  ]
+                )
+              );
+            }
+          )
+        )
+      )
     );
   }
 }

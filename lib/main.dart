@@ -1,7 +1,7 @@
-import 'package:canalendar/views/calendar_header.dart';
 import 'package:canalendar/views/calendar_view.dart';
 import 'package:canalendar/views/floating_action_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const CanalendarApp());
@@ -15,6 +15,8 @@ class CanalendarApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Canalendar',
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -32,6 +34,7 @@ class CanalendarApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        splashColor: Color.fromRGBO(0, 0, 0, 1),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Calendar'),
@@ -58,19 +61,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Text _monthName = Text('Jan');
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  String _selectedItem = 'Option 1';
+  List<String> _dropdownItems = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +80,20 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: DropdownButton<String>(
+          value: _selectedItem,
+          items: _dropdownItems.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedItem = newValue!;
+            });
+          },
+        ),
       ),
       body: Align(
         alignment: Alignment.topCenter,
@@ -107,17 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
           children: <Widget>[
-            _monthName,
-            const CalendarHeader(),
-            Expanded(child:
-              SingleChildScrollView(
-
-                child: Column(
-                  children: [
-                    CalendarView(),
-                  ],
-                ),
-              )
+            Expanded(
+              child: CalendarView()
             ),
             FloatingActionBar()
           ],

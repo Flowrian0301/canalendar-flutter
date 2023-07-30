@@ -1,0 +1,35 @@
+{
+  "january": "Januar",
+  "february": "Februar",
+  "march": "März",
+  "april": "April",
+  "may": "Mai",
+  "june": "Juni",
+  "july": "Juli",
+  "august": "August",
+  "september": "September",
+  "october": "Oktober",
+  "november": "November",
+  "december": "Dezember",
+
+  "monday": "Montag",
+  "tuesday": "Dienstag",
+  "wednesday": "Mittwoch",
+  "thursday": "Donnerstag",
+  "friday": "Freitag",
+  "saturday": "Samstag",
+  "sunday": "Sonntag",
+
+  "mondayShort": "Mo",
+  "tuesdayShort": "Di",
+  "wednesdayShort": "Mi",
+  "thursdayShort": "Do",
+  "fridayShort": "Fr",
+  "saturdayShort": "Sa",
+  "sundayShort": "So",
+
+  "monthYearCombo": "{month} {year}",
+  "dateDifferenceNegative": "{count, plural, =2{Vorgestern} =1{Gestern} other{Vor {count} Tagen}}",
+  "dateDifferencePositive": "{count, plural, =0{Heute} =1{Morgen} =2{Übermorgen} other{In {count} Tagen}}",
+  "dayInYear": "{dateDifference}, {date}, {serial} Tag des Jahres"
+}

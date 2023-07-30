@@ -1,16 +1,17 @@
 import 'package:canalendar/enumerations/session_type.dart';
+import 'package:canalendar/utils/icon_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class FloatingActionBar extends StatelessWidget {
-  FloatingActionBar();
+  FloatingActionBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     List<ButtonStyleButton> btns = [];
-    SessionType.values.forEach((type) {
+    for (SessionType type in SessionType.values) {
       btns.add(createButton(type));
-    });
+    }
     return Align(
       child: Container(
         decoration: BoxDecoration(
@@ -31,6 +32,7 @@ class FloatingActionBar extends StatelessWidget {
     return FilledButton(
         onPressed: () {},
         style: OutlinedButton.styleFrom(
+          backgroundColor: Colors.blue,
           padding: const EdgeInsets.all(16.0), // Set the padding of the button
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(32.0), // Set the border radius of the button
@@ -38,7 +40,7 @@ class FloatingActionBar extends StatelessWidget {
           //side: const BorderSide(width: 0, color: Colors.transparent), // Set the border properties
         ),
         child: SvgPicture.asset(
-          'icons/joint-hollow.svg',
+          IconUtil.getSessionTypeIconPath(type),
           colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
           width: 30,
           height: 30,
