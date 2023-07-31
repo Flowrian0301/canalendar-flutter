@@ -8,30 +8,31 @@ import 'package:flutter/material.dart';
 
 class SaveData {
   static SaveData? _instance;
-  SaveData? get instance => _instance;
-  int get currentUserIndex => users.isEmpty ? -1 : _currentUserIndex;
-  set currentUserIndex(int value) => _currentUserIndex = value;
+  static SaveData? get instance => _instance;
+  int getCurrentUserIndex() => users.isEmpty ? -1 : _currentUserIndex;
+  setCurrentUserIndex(int value) => _currentUserIndex = value;
   int _currentUserIndex = 0;
 
   List<User> users = [];
 
-  static User? get currentUser => _instance!.currentUserIndex < 0 || _instance!.currentUserIndex >= _instance!.users.length
+  static User? get currentUser => _instance!._currentUserIndex < 0
+      || _instance!._currentUserIndex >= _instance!.users.length
       ? null
-      : _instance!.users[_instance!.currentUserIndex];
+      : _instance!.users[_instance!._currentUserIndex];
 
   static bool get isInstanceSet => _instance != null;
 
   SaveData();
 
   void addUser(String name, TimeOfDay daySeparator, {StockType standardType = StockType.weed}) {
-    users.add(User.full(name, standardType, daySeparator));
-    if (currentUserIndex < 0) currentUserIndex = 0;
+    users.add(User(name: name, standardType: standardType, daySeparator: daySeparator));
+    if (_currentUserIndex < 0) _currentUserIndex = 0;
   }
 
   void deleteCurrentUser() {
-    if (currentUserIndex >= 0 && currentUserIndex < users.length) {
-      users.removeAt(currentUserIndex);
-      currentUserIndex = currentUserIndex.clamp(0, users.length -1);
+    if (_currentUserIndex >= 0 && _currentUserIndex < users.length) {
+      users.removeAt(_currentUserIndex);
+      _currentUserIndex = _currentUserIndex.clamp(0, users.length -1);
     }
   }
 
@@ -48,7 +49,7 @@ class SaveData {
       File file = File(path);
       if (file.existsSync()) {
         String jsonString = file.readAsStringSync();
-        //_instance = SaveData.fromJson(json.decode(jsonString));
+        _instance = SaveData.fromJson(json.decode(jsonString));
       } else {
         _instance = SaveData();
       }
@@ -76,14 +77,14 @@ class SaveData {
 
   Map<String, dynamic> toJson() {
     return {
-      'currentUserIndex': currentUserIndex,
+      'currentUserIndex': _currentUserIndex,
       'users': users.map((user) => user.toJson()).toList(),
     };
   }
 
-  /*factory SaveData.fromJson(Map<String, dynamic> json) {
+  factory SaveData.fromJson(Map<String, dynamic> json) {
     return SaveData()
-      ..currentUserIndex = json['currentUserIndex']
-      ..users = (json['users'] as List<dynamic>).map((userData) => User.fromJson(userData)).toList();
-  }*/
+      .._currentUserIndex = json['currentUserIndex']
+      ..users = List<User>.from((json['users'] as List<dynamic>).map((userData) => User.fromJson(userData)));
+  }
 }

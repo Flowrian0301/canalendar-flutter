@@ -6,11 +6,17 @@ class TimedLocation {
 
   TimedLocation(this.time, {this.location});
 
-  Map<String, dynamic> toJson() {
-
-    return {
+  Map<String, dynamic> toJson() =>
+    {
       'time': time.toIso8601String(),
       'location': location!.toJson()
     };
+
+  factory TimedLocation.fromJson(Map<String, dynamic> json) {
+    dynamic locationData = json['location'];
+    return TimedLocation(
+      DateTime.parse(json['time']),
+      location: locationData != null ? SerializableLocation.fromJson(locationData) : null,
+    );
   }
 }

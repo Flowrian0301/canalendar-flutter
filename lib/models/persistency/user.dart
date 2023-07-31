@@ -1,28 +1,27 @@
-import 'dart:convert';
-
 import 'package:canalendar/enumerations/stock_type.dart';
 import 'package:canalendar/models/session.dart';
+import 'package:canalendar/utils/date_time_util.dart';
 import 'package:flutter/material.dart';
 
 class User {
-  int currentStockIndex = 0;
-  int currentVapeIndex = 0;
+  int currentStockIndex;
+  int currentVapeIndex;
 
   String? name;
   StockType standardType = StockType.weed;
-  TimeOfDay daySeparator = const TimeOfDay(hour: 0, minute: 0);
+  TimeOfDay daySeparator;
   Duration get daySeparatorDuration => Duration(hours: daySeparator.hour, minutes: daySeparator.minute);
-  List<Session> sessions = [];
+  List<Session> sessions;
   //List<Stock> stocks = [];
   //List<Vaporizer> vapes = [];
 
-  User();
-
-  User.named(this.name, this.daySeparator);
-
-  User.withStandardType(this.name, this.standardType);
-
-  User.full(this.name, this.standardType, this.daySeparator);
+  User({this.name,
+    this.standardType = StockType.weed,
+    this.daySeparator = const TimeOfDay(hour: 0, minute: 0),
+    this.currentStockIndex = 0,
+    this.currentVapeIndex = 0,
+    this.sessions = const []
+  });
 
   void addSession(Session session) {
     int index = sessions.indexWhere((s) => session.compareTo(s) <= 0);
@@ -59,20 +58,25 @@ class User {
         .toList();
   }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() =>
+    {
       'name': name,
       'currentStockIndex': currentStockIndex,
       'currentVapeIndex': currentVapeIndex,
-      'standardType' : standardType,
-      'daySeparator' : daySeparator,
+      'standardType' : standardType.index,
+      'daySeparator' : DateTimeUtil.timeToJson(daySeparator),
       'sessions' : sessions.map((session) => session.toJson()).toList()
     };
-  }
 
-  /*factory User.fromJson(Map<String, dynamic> json) {
-    return SaveData()
-      ..currentUserIndex = json['currentUserIndex']
-      ..users = (json['users'] as List<dynamic>).map((userData) => User.fromJson(userData)).toList();
-  }*/
+  factory User.fromJson(Map<String, dynamic> json) => User(
+      name: json['name'],
+      currentStockIndex: json['currentStockIndex'],
+      currentVapeIndex: json['currentVapeIndex'],
+      standardType: StockType.values[json['standardType']],
+      daySeparator: DateTimeUtil.timefromJson(json['daySeparator']),
+      sessions: List<Session>
+        .from((json['sessions'] as List<dynamic>).map((sessionData)
+        => Session.fromJson(sessionData))),
+    );
+
 }

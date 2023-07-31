@@ -1,14 +1,18 @@
+import 'package:canalendar/models/persistency/save_data.dart';
 import 'package:canalendar/views/calendar_view.dart';
 import 'package:canalendar/views/floating_action_bar.dart';
+import 'package:canalendar/views/user_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
-  runApp(const CanalendarApp());
+  runApp(CanalendarApp());
 }
 
 class CanalendarApp extends StatelessWidget {
-  const CanalendarApp({super.key});
+  CanalendarApp({super.key}) {
+    SaveData.load();
+  }
 
   // This widget is the root of your application.
   @override
@@ -38,6 +42,26 @@ class CanalendarApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Calendar'),
+    );
+  }
+
+  static void openRegisterUserAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.registerUser),
+          content: Text('This is the content of the dialog.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -80,20 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: DropdownButton<String>(
-          value: _selectedItem,
-          items: _dropdownItems.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedItem = newValue!;
-            });
-          },
-        ),
+        title: UserDropdown()
       ),
       body: Align(
         alignment: Alignment.topCenter,
