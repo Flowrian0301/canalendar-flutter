@@ -1,24 +1,18 @@
 {
-  "monday": "Montag",
-  "tuesday": "Dienstag",
-  "wednesday": "Mittwoch",
-  "thursday": "Donnerstag",
-  "friday": "Freitag",
-  "saturday": "Samstag",
-  "sunday": "Sonntag",
-
-  "mondayShort": "Mo",
-  "tuesdayShort": "Di",
-  "wednesdayShort": "Mi",
-  "thursdayShort": "Do",
-  "fridayShort": "Fr",
-  "saturdayShort": "Sa",
-  "sundayShort": "So",
-
   "monthYearCombo": "{month} {year}",
   "dateDifferenceNegative": "{count, plural, =2{Vorgestern} =1{Gestern} other{Vor {count} Tagen}}",
   "dateDifferencePositive": "{count, plural, =0{Heute} =1{Morgen} =2{Übermorgen} other{In {count} Tagen}}",
   "dayInYear": "{dateDifference}, {date}, {serial} Tag des Jahres",
 
-  "registerUser": "Neuer Nutzer"
+  "registerUser": "Neuer Nutzer",
+  "name": "Name",
+  "standardStockType": "Standard Vorrat Art",
+  "daySeparator": "Tag startet",
+
+  "weed": "Weed",
+  "hash": "Hasch",
+  "hhc_weed": "Weed (HHC)",
+  "hhc_hash": "Hasch (HHC)",
+  "cbd_weed": "Weed (CBD)",
+  "cbd_hash": "Hasch (CBD)"
 }

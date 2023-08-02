@@ -1,4 +1,5 @@
 import 'package:canalendar/models/persistency/save_data.dart';
+import 'package:canalendar/utils/popup_util.dart';
 import 'package:canalendar/views/calendar_view.dart';
 import 'package:canalendar/views/floating_action_bar.dart';
 import 'package:canalendar/views/user_dropdown.dart';
@@ -6,13 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
-  runApp(CanalendarApp());
+  runApp(const CanalendarApp());
 }
 
 class CanalendarApp extends StatelessWidget {
-  CanalendarApp({super.key}) {
-    SaveData.load();
-  }
+  const CanalendarApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -45,25 +44,7 @@ class CanalendarApp extends StatelessWidget {
     );
   }
 
-  static void openRegisterUserAlert(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.registerUser),
-          content: Text('This is the content of the dialog.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
 }
 
 class MyHomePage extends StatefulWidget {
@@ -85,8 +66,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _selectedItem = 'Option 1';
-  List<String> _dropdownItems = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+  @override
+  void initState() {
+    super.initState();
+    SaveData.load();
+    if (SaveData.getUserNames().isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => PopupUtil.openRegisterUserAlert(context, isDismissable: false));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

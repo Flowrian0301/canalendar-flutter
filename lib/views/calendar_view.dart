@@ -38,7 +38,7 @@ class _CalendarViewState extends State<CalendarView> {
 
     return Column(
       children: <Widget>[
-        Text(StringUtil.localizedMonthYear(context, _firstOfMonth)),
+        Text(StringUtil.getMonthYear(context, _firstOfMonth)),
         const CalendarHeader(),
         Expanded(child:
         SingleChildScrollView(

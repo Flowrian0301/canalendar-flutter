@@ -24,7 +24,7 @@ class _CalendarDayBarState extends State<CalendarDayBar> {
             builder: (context, date, child) {
               return Container(
                 color: const Color.fromRGBO(240, 240, 240, 1),
-                child: Text(StringUtil.positionalDayData(context, date)),
+                child: Text(StringUtil.getPositionalDayData(context, date)),
               );
             }
           )

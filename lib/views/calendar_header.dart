@@ -19,7 +19,7 @@ class CalendarHeader extends StatelessWidget {
       children.add(
         Expanded(
           child: Text(
-            StringUtil.localizedDayNameShort(context, date),
+            StringUtil.getDayNameShort(context, date),
             textAlign: TextAlign.center,
           )
         )
