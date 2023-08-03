@@ -3,7 +3,6 @@ import 'package:canalendar/views/calendar_day_bar.dart';
 import 'package:canalendar/views/calendar_header.dart';
 import 'package:canalendar/views/calendar_month_grid.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CalendarView extends StatefulWidget {
 

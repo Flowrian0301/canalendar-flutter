@@ -3,13 +3,14 @@ import 'package:canalendar/utils/date_time_util.dart';
 import 'package:flutter/material.dart';
 
 class CalendarCell extends StatefulWidget implements Comparable<CalendarCell> {
+  static bool lineDisplay = true;
   ValueNotifier<DateTime> date;
   ValueNotifier<bool> selected = ValueNotifier<bool>(false);
-  static bool lineDisplay = true;
+  bool isCurrentMonth;
   List<Session> sessions;
   Function(DateTime date) onClickedCallback;
 
-  CalendarCell(DateTime date, this.onClickedCallback, {super.key})
+  CalendarCell(DateTime date, this.onClickedCallback, {super.key, this.isCurrentMonth = true})
       : sessions = [], date = ValueNotifier<DateTime>(date);
 
   void setSelected(bool isSelected) {
@@ -35,6 +36,8 @@ class _CalendarCellState extends State<CalendarCell> {
 
   @override
   Widget build(BuildContext context) {
+    bool isWeekend = widget.date.value.weekday == 6
+      || widget.date.value.weekday == 7;
     return Expanded(
       child: GestureDetector(
         onTap: () => widget._clicked(),
@@ -62,6 +65,13 @@ class _CalendarCellState extends State<CalendarCell> {
                       builder: (context, date, child) {
                         return Text(
                           date.day.toString(),
+                          style: TextStyle(
+                              color: widget.isCurrentMonth
+                                  ? (isWeekend
+                                    ? Colors.black38
+                                    : Colors.black)
+                                  : Colors.black12
+                          ),
                           textAlign: TextAlign.center
                         );
                       }

@@ -37,7 +37,8 @@ class CalendarMonthGrid extends StatelessWidget {
 
       // Create 7 cells
       for (int day = 0; day < 7; day++) {
-        CalendarCell cell = CalendarCell(dateIterator, (date) => _onSelectedDateSet(date));
+        CalendarCell cell = CalendarCell(dateIterator, (date) => _onSelectedDateSet(date),
+          isCurrentMonth: dateIterator.month == firstOfMonth.month);
         days.add(cell);
         cells[dateIterator] = cell;
         

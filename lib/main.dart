@@ -37,7 +37,6 @@ class CanalendarApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        splashColor: Color.fromRGBO(0, 0, 0, 1),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Calendar'),
@@ -70,20 +69,23 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    appBarUserDropdown = UserDropdown(color: Colors.white,);
     SaveData.load();
+    if (appBarUserDropdown != null && appBarUserDropdown!.updateUserListCallback != null) appBarUserDropdown!.updateUserListCallback!();
     if (SaveData.getUserNames().isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => PopupUtil.openRegisterUserAlert(context, isDismissable: false,
           onUpdateUserList: () {
-            appBarUserDropdown?.updateUserList();
-            appBarUserDropdown?.setCurrentUser(0);
-          }));
+            appBarUserDropdown?.updateUserListCallback!();
+            SaveData.save();
+          })
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    appBarUserDropdown = UserDropdown();
+    AppLocalizations localization = AppLocalizations.of(context)!;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -99,6 +101,68 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: appBarUserDropdown
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            /*UserAccountsDrawerHeader(
+              accountName: Text('John Doe'),
+              accountEmail: Text('john.doe@example.com'),
+              /*currentAccountPicture: CircleAvatar(
+                child: Icon(Icons.person),
+              ),*/
+            ),*/
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text(localization.user_info),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person_add),
+              title: Text(localization.new_user),
+              onTap: () {
+                Navigator.pop(context);
+                PopupUtil.openRegisterUserAlert(context, onUpdateUserList: () {
+                  appBarUserDropdown?.updateUserListCallback!();
+                  SaveData.save();
+                });
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person_remove),
+              title: Text(localization.delete_user),
+              onTap: () {
+                Navigator.pop(context);
+                PopupUtil.openDeleteUserAlert(context, onUpdateUserList: () {
+                  appBarUserDropdown?.updateUserListCallback!();
+                  SaveData.save();
+                  if (SaveData.getUserNames().isEmpty) {
+                    PopupUtil.openRegisterUserAlert(context, onUpdateUserList: () {
+                      appBarUserDropdown?.updateUserListCallback!();
+                      SaveData.save();
+                    });
+                  }
+                });
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.calendar_month),
+              title: Text(localization.calendar),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text(localization.settings),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
       body: Align(
         alignment: Alignment.topCenter,
@@ -120,7 +184,10 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               child: CalendarView()
             ),
-            FloatingActionBar()
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: FloatingActionBar(),
+            )
           ],
         ),
       ),

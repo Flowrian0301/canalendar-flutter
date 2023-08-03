@@ -14,5 +14,17 @@
   "hhc_weed": "Weed (HHC)",
   "hhc_hash": "Hasch (HHC)",
   "cbd_weed": "Weed (CBD)",
-  "cbd_hash": "Hasch (CBD)"
+  "cbd_hash": "Hasch (CBD)",
+
+  "user_info": "Nutzerinfo",
+  "new_user": "Nutzer hinzufügen",
+  "delete_user": "Nutzer löschen",
+
+  "delete_user_message": "Alle Daten von {user} löschen?",
+
+  "calendar": "Kalendar",
+  "settings": "Einstellungen",
+
+  "okay": "Okay",
+  "cancel": "Abbrechen"
 }

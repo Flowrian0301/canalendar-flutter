@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:canalendar/enumerations/stock_type.dart';
 import 'package:canalendar/models/persistency/user.dart';
@@ -26,16 +27,15 @@ class SaveData {
   SaveData();
 
   void addUser(String name, TimeOfDay daySeparator,
-      {StockType standardType = StockType.weed, Function? onUpdateUserList}) {
+      {StockType standardType = StockType.weed}) {
     users.add(User(name: name, standardType: standardType, daySeparator: daySeparator));
     if (_currentUserIndex < 0) _currentUserIndex = 0;
-    onUpdateUserList!();
   }
 
   void deleteCurrentUser() {
     if (_currentUserIndex >= 0 && _currentUserIndex < users.length) {
       users.removeAt(_currentUserIndex);
-      _currentUserIndex = _currentUserIndex.clamp(0, users.length -1);
+      _currentUserIndex = max(0, _currentUserIndex - 1);
     }
   }
 

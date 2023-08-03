@@ -8,56 +8,51 @@ class FloatingActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<ButtonStyleButton> btns = [];
+    List<Widget> btns = [];
     for (SessionType type in SessionType.values) {
       btns.add(createButton(type));
     }
     return Align(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: const [
-            BoxShadow(color: Color.fromRGBO(0, 0, 0, .2), offset: Offset(5, 5), blurRadius: 10)
-          ]
-        ),
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        elevation: 4,
         child: Wrap(
-            children: btns
+          children: btns
         )
       )
     );
   }
 
-  ButtonStyleButton createButton(SessionType type) {
-    return FilledButton(
-        onPressed: () {},
-        style: OutlinedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          padding: const EdgeInsets.all(16.0), // Set the padding of the button
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(32.0), // Set the border radius of the button
-          ),
-          //side: const BorderSide(width: 0, color: Colors.transparent), // Set the border properties
-        ),
+  Widget createButton(SessionType type) {
+    List<String> dropdownItems = ['Option 1', 'Option 2', 'Option 3'];
+    return PopupMenuButton(
+      onSelected: (index) {
+        print(index.toString());
+      },
+      tooltip: '',
+      position: PopupMenuPosition.over,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8)
+      ),
+      itemBuilder: (BuildContext context) {
+        return dropdownItems.map((item) {
+          int index = dropdownItems.indexOf(item);
+          return PopupMenuItem<int>(
+            value: index,
+            child: Text(item),
+          );
+        }).toList();
+      },
+      child: Container(
+        padding: EdgeInsets.all(16),
         child: SvgPicture.asset(
           IconUtil.getSessionTypeIconPath(type),
           colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
           width: 30,
           height: 30,
         ),
+      ),
     );
-    /*return Container(
-      padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: SvgPicture.asset(
-        'icons/joint-hollow.svg',
-        colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-        width: 30,
-        height: 30,
-      ),
-    );*/
   }
 }

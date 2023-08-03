@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:canalendar/enumerations/stock_type.dart';
 import 'package:canalendar/models/persistency/save_data.dart';
 import 'package:canalendar/utils/dropdown_map_util.dart';
@@ -21,6 +19,31 @@ final class PopupUtil {
       ),
       autocorrect: false,
       controller: TextEditingController(),
+    );
+
+    List<Widget> actions = [];
+    if (isDismissable) {
+      actions.add(
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(localization.cancel)
+        )
+      );
+    }
+
+    actions.add(
+      TextButton(
+          onPressed: () {
+            String name = nameInput.controller!.text;
+            if (name.isNotEmpty) {
+              Navigator.of(context).pop();
+              SaveData.instance!.addUser(name, selectedTime.value,
+                  standardType: StockType.values[selectedStockTypeIndex.value]);
+              onUpdateUserList!();
+            }
+          },
+          child: Text(localization.okay)
+      )
     );
 
 
@@ -101,20 +124,7 @@ final class PopupUtil {
                     )
                   ],
                 ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      String name = nameInput.controller!.text;
-                      if (name.isNotEmpty) {
-                        SaveData.instance!.addUser(name, selectedTime.value,
-                        standardType: StockType.values[selectedStockTypeIndex.value],
-                        onUpdateUserList: onUpdateUserList);
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
+                actions: actions,
               )
             ]
           )
@@ -135,5 +145,39 @@ final class PopupUtil {
     if (picked != null && picked != initialTime) {
       onTimeSelected(picked);
     }
+  }
+
+  static void openDeleteUserAlert(BuildContext context, {Function? onUpdateUserList}) {
+    AppLocalizations localization = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+            child: Wrap(
+                children: [
+                  AlertDialog(
+                    title: Text(localization.delete_user),
+                    content: Text(localization.delete_user_message(SaveData.currentUser!.name!)),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(localization.cancel),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          SaveData.instance!.deleteCurrentUser();
+                          onUpdateUserList!();
+                        },
+                        child: Text(localization.okay),
+                      ),
+                    ],
+                  )
+                ]
+            )
+        );
+      },
+    );
   }
 }
