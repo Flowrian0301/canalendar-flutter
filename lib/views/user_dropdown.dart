@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 import '../models/persistency/user.dart';
 
 class UserDropdown extends StatelessWidget {
-  static ValueNotifier<List<String>> _users = ValueNotifier([]);
-  static ValueNotifier<int> _selectedUser = ValueNotifier(0);
-  Function? openRegisterUserAlert;
+  final ValueNotifier<List<String>> _users = ValueNotifier([]);
+  final ValueNotifier<int> _selectedUser = ValueNotifier(0);
+  final Function? openRegisterUserAlert;
 
-  static void updateUserList(List<User> users) {
+  UserDropdown({Key? key, this.openRegisterUserAlert}) : super(key: key);
+
+  void updateUserList() {
     _users.value = SaveData.getUserNames();
   }
 
-  static void setCurrentUser(int index) {
+  void setCurrentUser(int index) {
     SaveData.instance!.setCurrentUserIndex(index);
     _selectedUser.value = index;
   }
-
-  UserDropdown({super.key, this.openRegisterUserAlert});
 
   @override
   Widget build(BuildContext context) {
@@ -35,5 +35,4 @@ class UserDropdown extends StatelessWidget {
       }).toList(),
     );
   }
-
 }

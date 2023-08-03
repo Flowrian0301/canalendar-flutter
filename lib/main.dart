@@ -66,18 +66,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  UserDropdown? appBarUserDropdown;
   @override
   void initState() {
     super.initState();
     SaveData.load();
     if (SaveData.getUserNames().isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback(
-          (_) => PopupUtil.openRegisterUserAlert(context, isDismissable: false));
+          (_) => PopupUtil.openRegisterUserAlert(context, isDismissable: false,
+          onUpdateUserList: () {
+            appBarUserDropdown?.updateUserList();
+            appBarUserDropdown?.setCurrentUser(0);
+          }));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    appBarUserDropdown = UserDropdown();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -92,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: UserDropdown()
+        title: appBarUserDropdown
       ),
       body: Align(
         alignment: Alignment.topCenter,

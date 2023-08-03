@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:canalendar/enumerations/stock_type.dart';
 import 'package:canalendar/models/persistency/user.dart';
 import 'package:canalendar/models/session.dart';
+import 'package:canalendar/views/user_dropdown.dart';
 import 'package:flutter/material.dart';
 
 class SaveData {
@@ -24,9 +25,11 @@ class SaveData {
 
   SaveData();
 
-  void addUser(String name, TimeOfDay daySeparator, {StockType standardType = StockType.weed}) {
+  void addUser(String name, TimeOfDay daySeparator,
+      {StockType standardType = StockType.weed, Function? onUpdateUserList}) {
     users.add(User(name: name, standardType: standardType, daySeparator: daySeparator));
     if (_currentUserIndex < 0) _currentUserIndex = 0;
+    onUpdateUserList!();
   }
 
   void deleteCurrentUser() {

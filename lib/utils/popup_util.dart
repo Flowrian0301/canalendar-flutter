@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final class PopupUtil {
-  static void openRegisterUserAlert(BuildContext context, {bool isDismissable = true}) {
+  static void openRegisterUserAlert(BuildContext context,
+      {bool isDismissable = true, Function? onUpdateUserList}) {
     ValueNotifier<int> selectedStockTypeIndex = ValueNotifier(StockType.weed.index);
     ValueNotifier<TimeOfDay> selectedTime = ValueNotifier(TimeOfDay(hour: 0, minute: 0));
 
@@ -19,6 +20,7 @@ final class PopupUtil {
         border: const OutlineInputBorder(),
       ),
       autocorrect: false,
+      controller: TextEditingController(),
     );
 
 
@@ -102,8 +104,13 @@ final class PopupUtil {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      SaveData.instance!.addUser(nameInput.controller!.text, selectedTime.value, standardType: StockType.values[selectedStockTypeIndex.value]);
-                      Navigator.of(context).pop();
+                      String name = nameInput.controller!.text;
+                      if (name.isNotEmpty) {
+                        SaveData.instance!.addUser(name, selectedTime.value,
+                        standardType: StockType.values[selectedStockTypeIndex.value],
+                        onUpdateUserList: onUpdateUserList);
+                        Navigator.of(context).pop();
+                      }
                     },
                     child: Text('OK'),
                   ),
