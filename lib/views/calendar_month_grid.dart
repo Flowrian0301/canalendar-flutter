@@ -1,4 +1,5 @@
 import 'package:canalendar/views/calendar_cell.dart';
+import 'package:canalendar/views/calendar_view.dart';
 import 'package:flutter/material.dart';
 
 class CalendarMonthGrid extends StatelessWidget {
@@ -15,7 +16,17 @@ class CalendarMonthGrid extends StatelessWidget {
     cells[oldDate]?.setSelected(false);
     cells[date]?.setSelected(true);
   }
-  
+
+  void updateSelectedCell() {
+    cells[CalendarView.selectedDate]!.updateData();
+  }
+
+  void updateCells() {
+    cells.forEach((key, value) {
+      value.updateData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     cells.clear();

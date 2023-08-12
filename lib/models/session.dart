@@ -15,7 +15,8 @@ class Session implements Comparable<Session> {
 
   Session();
 
-  Session.fromOtherUser(this.type, this.stockType, DateTime time, SerializableLocation? location) {
+  Session.fromOtherUser(this.type, this.stockType, DateTime time,
+      {SerializableLocation? location}) {
     usersStock = false;
     trackedData = [];
     addTrackedData(time, location);
@@ -25,7 +26,8 @@ class Session implements Comparable<Session> {
     usersStock = false;
   }
 
-  Session.fromUserStock(this.type, this.stockRef, DateTime time, SerializableLocation? location) {
+  Session.fromUserStock(this.type, this.stockRef, DateTime time,
+      {SerializableLocation? location}) {
     usersStock = true;
     trackedData = [];
     addTrackedData(time, location);

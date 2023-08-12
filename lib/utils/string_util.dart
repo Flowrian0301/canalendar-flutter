@@ -1,3 +1,4 @@
+import 'package:canalendar/enumerations/session_type.dart';
 import 'package:canalendar/enumerations/stock_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -79,6 +80,20 @@ final class StringUtil {
         return localizations.cbd_hash;
       default:
         return localizations.weed;
+    }
+  }
+
+  static String getSessionTypeName(BuildContext context, SessionType type) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+    switch (type) {
+      case SessionType.sticky:
+        return localizations.sticky;
+      case SessionType.edible:
+        return localizations.edible;
+      case SessionType.bong:
+        return localizations.bong;
+      default:
+        return localizations.joint;
     }
   }
 

@@ -13,4 +13,6 @@ final class IconUtil {
         return 'assets/icons/joint-hollow.svg';
     }
   }
+
+  static String getPurchaseIconPath() => 'assets/icons/joint-hollow.svg';
 }

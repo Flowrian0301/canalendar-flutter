@@ -37,9 +37,9 @@ final class PopupUtil {
             String name = nameInput.controller!.text;
             if (name.isNotEmpty) {
               Navigator.of(context).pop();
-              SaveData.instance!.addUser(name, selectedTime.value,
+              SaveData.addUser(name, selectedTime.value,
                   standardType: StockType.values[selectedStockTypeIndex.value]);
-              onUpdateUserList!();
+              if (onUpdateUserList != null) onUpdateUserList();
             }
           },
           child: Text(localization.okay)
@@ -61,7 +61,7 @@ final class PopupUtil {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        Text(localization.standardStockType),
+                        Container(child:Text(localization.standardStockType)),
                         const SizedBox(width: 32),
                         ValueListenableBuilder(
                           valueListenable: selectedStockTypeIndex,
@@ -83,7 +83,7 @@ final class PopupUtil {
                                     int index = DropdownMapUtil.getStockTypeOptions(context).indexOf(item);
                                     return DropdownMenuItem<int>(
                                       value: index,
-                                      child: Text(item),
+                                      child: Text(item)
                                     );
                                   }).toList(),
                                 )
@@ -147,7 +147,7 @@ final class PopupUtil {
     }
   }
 
-  static void openDeleteUserAlert(BuildContext context, {Function? onUpdateUserList}) {
+  static void openDeleteUserAlert(BuildContext context) {
     AppLocalizations localization = AppLocalizations.of(context)!;
 
     showDialog(
@@ -158,7 +158,7 @@ final class PopupUtil {
                 children: [
                   AlertDialog(
                     title: Text(localization.delete_user),
-                    content: Text(localization.delete_user_message(SaveData.currentUser!.name!)),
+                    content: Text(localization.delete_user_message(SaveData.currentUser.value!.name!)),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
@@ -167,8 +167,11 @@ final class PopupUtil {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          SaveData.instance!.deleteCurrentUser();
-                          onUpdateUserList!();
+                          SaveData.deleteCurrentUser();
+                          if (SaveData.userNames.value.isEmpty) {
+                            print("Emoty");
+                            openRegisterUserAlert(context);
+                          }
                         },
                         child: Text(localization.okay),
                       ),

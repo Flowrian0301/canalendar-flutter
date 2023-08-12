@@ -16,15 +16,35 @@
   "cbd_weed": "Weed (CBD)",
   "cbd_hash": "Hash (CBD)",
 
+  "joint": "Joint",
+  "sticky": "Sticky",
+  "edible": "Edible",
+  "bong": "Bong",
+
+  "stock": "Stock",
+
   "user_info": "User information",
   "new_user": "Add user",
   "delete_user": "Delete user",
 
   "delete_user_message": "Delete all data of {user}?",
+   "date_is_in_future_message": "The selected time is in the future: A session can not be added.",
 
   "calendar": "Calendar",
   "settings": "Settings",
 
   "okay": "Okay",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+
+  "users_stock": "{user}'s stock",
+  "anybodys_stock": "Anybody's stock",
+  "edit_amount": "Edit amounts",
+  "add_pro": "Add (Pro)",
+
+  "add": "Add",
+  "edit": "Edit",
+  "set_finished_date": "Mark as used up",
+  "manage_stocks": "Manage stocks",
+
+  "no_entry": "No entry"
 }

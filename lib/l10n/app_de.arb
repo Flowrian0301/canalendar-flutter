@@ -16,15 +16,35 @@
   "cbd_weed": "Weed (CBD)",
   "cbd_hash": "Hasch (CBD)",
 
+  "joint": "Joint",
+  "sticky": "Sticky",
+  "edible": "Edible",
+  "bong": "Bong",
+
+  "stock": "Vorrat",
+
   "user_info": "Nutzerinfo",
   "new_user": "Nutzer hinzufügen",
   "delete_user": "Nutzer löschen",
 
   "delete_user_message": "Alle Daten von {user} löschen?",
+  "date_is_in_future_message": "Der gewählte Zeitpunkt befindet sich in der Zukunft: Es kann keine Session hinzugefügt werden.",
 
   "calendar": "Kalendar",
   "settings": "Einstellungen",
 
   "okay": "Okay",
-  "cancel": "Abbrechen"
+  "cancel": "Abbrechen",
+
+  "users_stock": "{user}s Vorrat",
+  "anybodys_stock": "Unbestimmter Vorrat",
+  "edit_amount": "Menge bearbeiten",
+  "add_pro": "Hinzufügen (Profi)",
+
+  "add": "Hinzufügen",
+  "edit": "Bearbeiten",
+  "set_finished_date": "Als aufgebraucht markieren",
+  "manage_stocks": "Vorräte verwalten",
+
+  "no_entry": "Kein Eintrag"
 }

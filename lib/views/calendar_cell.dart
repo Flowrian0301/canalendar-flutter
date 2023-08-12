@@ -1,17 +1,27 @@
+import 'dart:ui';
+
+import 'package:canalendar/models/persistency/save_data.dart';
 import 'package:canalendar/models/session.dart';
 import 'package:canalendar/utils/date_time_util.dart';
 import 'package:flutter/material.dart';
 
 class CalendarCell extends StatefulWidget implements Comparable<CalendarCell> {
-  static bool lineDisplay = true;
+  static ValueNotifier<bool> lineDisplay = ValueNotifier(false);
   ValueNotifier<DateTime> date;
-  ValueNotifier<bool> selected = ValueNotifier<bool>(false);
+  ValueNotifier<bool> selected = ValueNotifier(false);
   bool isCurrentMonth;
-  List<Session> sessions;
+  ValueNotifier<List<Session>> sessions = ValueNotifier([]);
   Function(DateTime date) onClickedCallback;
 
   CalendarCell(DateTime date, this.onClickedCallback, {super.key, this.isCurrentMonth = true})
-      : sessions = [], date = ValueNotifier<DateTime>(date);
+      : date = ValueNotifier<DateTime>(date) {
+    sessions.value = SaveData.currentUser.value == null
+        ? [] : SaveData.currentUser.value!.getSessions(date);
+  }
+
+  void updateData() {
+    sessions.value = SaveData.currentUser.value!.getSessions(date.value);
+  }
 
   void setSelected(bool isSelected) {
     selected.value = isSelected;
@@ -75,6 +85,51 @@ class _CalendarCellState extends State<CalendarCell> {
                           textAlign: TextAlign.center
                         );
                       }
+                    ),
+                    ValueListenableBuilder<List<Session>>(
+                      valueListenable: widget.sessions,
+                      builder: (context, sessions, child) {
+                        return ValueListenableBuilder<bool>(
+                          valueListenable: CalendarCell.lineDisplay,
+                          builder: (context, lineDisplay, child) {
+                            return Visibility(
+                              visible: lineDisplay && sessions.isNotEmpty,
+                              child: Container(
+                                color: Colors.blue,
+                                height: 2,
+                              )
+                            );
+                          }
+                        );
+                      }
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ValueListenableBuilder<List<Session>>(
+                            valueListenable: widget.sessions,
+                            builder: (context, sessions, child) {
+                              return ValueListenableBuilder<bool>(
+                                  valueListenable: CalendarCell.lineDisplay,
+                                  builder: (context, lineDisplay, child) {
+                                    return Visibility(
+                                        visible: !lineDisplay && sessions.isNotEmpty,
+                                        child: Container(
+                                          width: clampDouble(
+                                              (sessions.length.toDouble() + 1) * 2, 0, 10), // Durchmesser des Kreises
+                                          height: clampDouble(
+                                              (sessions.length.toDouble() + 1) * 2, 0, 10), // Durchmesser des Kreises
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.blue, // Farbe des Kreises
+                                          ),
+                                        )
+                                    );
+                                  }
+                              );
+                            }
+                        )
+                      ],
                     )
                   ]
                 )

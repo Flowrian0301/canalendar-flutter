@@ -9,7 +9,7 @@ class TimedLocation {
   Map<String, dynamic> toJson() =>
     {
       'time': time.toIso8601String(),
-      'location': location!.toJson()
+      'location': location?.toJson()
     };
 
   factory TimedLocation.fromJson(Map<String, dynamic> json) {

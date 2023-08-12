@@ -65,33 +65,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  UserDropdown? appBarUserDropdown;
+  CalendarView? calendar;
+
   @override
   void initState() {
     super.initState();
-    appBarUserDropdown = UserDropdown(color: Colors.white,);
-    SaveData.load();
-    if (appBarUserDropdown != null && appBarUserDropdown!.updateUserListCallback != null) appBarUserDropdown!.updateUserListCallback!();
-    if (SaveData.getUserNames().isEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback(
-          (_) => PopupUtil.openRegisterUserAlert(context, isDismissable: false,
-          onUpdateUserList: () {
-            appBarUserDropdown?.updateUserListCallback!();
-            SaveData.save();
-          })
-      );
-    }
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        SaveData.load().whenComplete(() {
+          if (SaveData.userNames.value.isNotEmpty) {
+            calendar?.onUserChanged();
+          }
+          else {
+            PopupUtil.openRegisterUserAlert(context, isDismissable: false,
+              onUpdateUserList: () {
+                calendar?.onUserChanged();
+                SaveData.save();
+              }
+              );
+            }
+        });
+      }
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     AppLocalizations localization = AppLocalizations.of(context)!;
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    calendar = CalendarView();
+    FloatingActionBar floatingActionBar = FloatingActionBar(calendar!.updateSelectedDay);
+
+    SaveData.currentUser.addListener(() {
+      calendar!.onUserChanged();
+    });
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -100,11 +107,14 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: appBarUserDropdown
+        title: UserDropdown(color: Colors.white)
       ),
       drawer: Drawer(
         child: ListView(
           children: [
+            DrawerHeader(
+                child: UserDropdown()
+            ),
             /*UserAccountsDrawerHeader(
               accountName: Text('John Doe'),
               accountEmail: Text('john.doe@example.com'),
@@ -124,10 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text(localization.new_user),
               onTap: () {
                 Navigator.pop(context);
-                PopupUtil.openRegisterUserAlert(context, onUpdateUserList: () {
-                  appBarUserDropdown?.updateUserListCallback!();
-                  SaveData.save();
-                });
+                PopupUtil.openRegisterUserAlert(context);
               },
             ),
             ListTile(
@@ -135,16 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text(localization.delete_user),
               onTap: () {
                 Navigator.pop(context);
-                PopupUtil.openDeleteUserAlert(context, onUpdateUserList: () {
-                  appBarUserDropdown?.updateUserListCallback!();
-                  SaveData.save();
-                  if (SaveData.getUserNames().isEmpty) {
-                    PopupUtil.openRegisterUserAlert(context, onUpdateUserList: () {
-                      appBarUserDropdown?.updateUserListCallback!();
-                      SaveData.save();
-                    });
-                  }
-                });
+                PopupUtil.openDeleteUserAlert(context);
               },
             ),
             ListTile(
@@ -164,32 +162,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Align(
-        alignment: Alignment.topCenter,
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          children: <Widget>[
-            Expanded(
-              child: CalendarView()
-            ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: FloatingActionBar(),
-            )
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: calendar!
+          ),
+          Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            child: floatingActionBar,
+          )
+        ],
       ),
     );
   }
