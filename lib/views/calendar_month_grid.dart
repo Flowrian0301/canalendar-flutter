@@ -3,22 +3,32 @@ import 'package:canalendar/views/calendar_view.dart';
 import 'package:flutter/material.dart';
 
 class CalendarMonthGrid extends StatelessWidget {
-  DateTime firstOfMonth = DateTime.now();
+  DateTime firstOfMonth;
   Map<DateTime, CalendarCell> cells = {};
   final Function(DateTime date) _onSelectedDateSet;
+  late DateTime _selectedDate;
 
-  CalendarMonthGrid(this._onSelectedDateSet, {super.key}) {
-    DateTime now = DateTime.now();
-    firstOfMonth = DateTime(now.year, now.month);
+  CalendarMonthGrid(this._onSelectedDateSet, this.firstOfMonth, {super.key, required ValueNotifier<DateTime> selectedDateNotifier}) {
+    _selectedDate = selectedDateNotifier.value;
+    selectedDateNotifier.addListener(() {
+      _updateSelectedDate(selectedDateNotifier.value, oldDate: _selectedDate);
+      _selectedDate = selectedDateNotifier.value;
+    });
   }
 
-  void updateSelectedDate(DateTime date, {DateTime? oldDate}) {
-    cells[oldDate]?.setSelected(false);
-    cells[date]?.setSelected(true);
+  void _updateSelectedDate(DateTime date, {DateTime? oldDate}) {
+    //select cell with same day ignoring month
+    DateTime selected = DateTime(firstOfMonth.year, firstOfMonth.month, date.day);
+    cells[selected]?.setSelected(true);
+
+    if (oldDate == null) return;
+
+    DateTime oldSelected = DateTime(firstOfMonth.year, firstOfMonth.month, oldDate.day);
+    cells[oldSelected]?.setSelected(false);
   }
 
   void updateSelectedCell() {
-    cells[CalendarView.selectedDate]!.updateData();
+    cells[_selectedDate]!.updateData();
   }
 
   void updateCells() {
@@ -62,26 +72,21 @@ class CalendarMonthGrid extends StatelessWidget {
       );
     }
 
-    DateTime now = DateTime.now();
-    now = DateTime(now.year, now.month, now.day);
-    updateSelectedDate(now);
-
+    _updateSelectedDate(_selectedDate);
     // Create layout
-    return Align(
-        child: LayoutBuilder(
-            builder: (context, constraints) {
-              double maxWidth = constraints.maxWidth > 400 ? 400 : constraints
-                  .maxWidth;
-              return ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: maxWidth,
-                  ),
-                  child: Wrap(
-                    children: rows,
-                  )
-              );
-            }
-        )
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double maxWidth = constraints.maxWidth > 400 ? 400 : constraints
+            .maxWidth;
+        return ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: maxWidth
+            ),
+            child: Column(
+              children: rows,
+            )
+        );
+      }
     );
   }
 }

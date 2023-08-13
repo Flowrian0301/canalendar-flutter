@@ -13,8 +13,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class FloatingActionBar extends StatelessWidget {
   VoidCallback onDayDataChanged;
+  ValueNotifier<DateTime> _selectedDate;
 
-  FloatingActionBar(this.onDayDataChanged, {super.key});
+  FloatingActionBar(this.onDayDataChanged, {super.key, required ValueNotifier<DateTime> selectedDate})
+    : _selectedDate = selectedDate;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +80,7 @@ class FloatingActionBar extends StatelessWidget {
   }
 
   bool _dateInFutureCheck(BuildContext context) {
-    if (CalendarView.selectedDate.isAfter(DateTime.now())) {
+    if (_selectedDate.value.isAfter(DateTime.now())) {
       AppLocalizations localizations = AppLocalizations.of(context)!;
       if (Platform.isIOS || Platform.isAndroid) {
         Fluttertoast.showToast(
@@ -139,7 +141,7 @@ class FloatingActionBar extends StatelessWidget {
           if (!_dateInFutureCheck(context)) {
             SaveData.addSessionToCurrentUser(
                 Session.fromOtherUser(type, SaveData.currentUser.value!.standardType,
-                    CalendarView.selectedDate)
+                    _selectedDate.value)
             );
             //update cell
             onDayDataChanged();

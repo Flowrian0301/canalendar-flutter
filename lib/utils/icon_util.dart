@@ -14,5 +14,6 @@ final class IconUtil {
     }
   }
 
-  static String getPurchaseIconPath() => 'assets/icons/joint-hollow.svg';
+  static String getPurchaseIconPath() => 'assets/icons/cannabis-bag-hollow.svg';
+  static String getCannabisIconPath() => 'assets/icons/cannabis.svg';
 }

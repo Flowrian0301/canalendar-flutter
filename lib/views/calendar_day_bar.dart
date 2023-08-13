@@ -23,6 +23,7 @@ class _CalendarDayBarState extends State<CalendarDayBar> {
             valueListenable: widget._date,
             builder: (context, date, child) {
               return Container(
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                 color: const Color.fromRGBO(240, 240, 240, 1),
                 child: Text(StringUtil.getPositionalDayData(context, date)),
               );

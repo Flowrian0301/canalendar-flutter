@@ -52,8 +52,8 @@ class IconAmountComponent extends StatelessWidget {
               SvgPicture.asset(
                 IconUtil.getSessionTypeIconPath(_type),
                 colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-                width: 16,
-                height: 16,
+                width: 20,
+                height: 20,
               ),
               Text(amount.toString())
             ],

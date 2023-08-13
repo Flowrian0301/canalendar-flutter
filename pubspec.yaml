@@ -41,6 +41,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  jiffy: ^6.2.1
+  expandable_page_view: ^1.0.17
+  flutter_osm_plugin: ^0.60.1
 
 dev_dependencies:
   flutter_test:
