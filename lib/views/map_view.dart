@@ -25,7 +25,7 @@ class _MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) {
     {
-      if (!Platform.isWindows) {
+      try {
         OSMFlutter map = OSMFlutter(
             controller: controller,
             osmOption: OSMOption(
@@ -59,17 +59,18 @@ class _MapViewState extends State<MapView> {
               ),
               markerOption: MarkerOption(
                   defaultMarker: MarkerIcon(
-                icon: Icon(
-                  Icons.person_pin_circle,
-                  color: Colors.blue,
-                  size: 56,
-                ),
-              )),
+                    icon: Icon(
+                      Icons.person_pin_circle,
+                      color: Colors.blue,
+                      size: 56,
+                    ),
+                  )),
             ));
-
         return Expanded(child: map);
       }
-      else return Column();
+      catch (_) {
+      }
+      return Container();
     }
   }
 

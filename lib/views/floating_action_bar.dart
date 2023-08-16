@@ -4,6 +4,7 @@ import 'package:canalendar/enumerations/session_type.dart';
 import 'package:canalendar/models/persistency/save_data.dart';
 import 'package:canalendar/models/session.dart';
 import 'package:canalendar/utils/icon_util.dart';
+import 'package:canalendar/utils/popup_util.dart';
 import 'package:canalendar/utils/string_util.dart';
 import 'package:canalendar/views/calendar_view.dart';
 import 'package:flutter/material.dart';
@@ -145,6 +146,19 @@ class FloatingActionBar extends StatelessWidget {
             );
             //update cell
             onDayDataChanged();
+          }
+          break;
+        }
+        case 3: {
+          if (!_dateInFutureCheck(context)) {
+            PopupUtil.openAddExtended(
+                context,
+                type: type,
+                selectedDate: _selectedDate.value,
+                onSessionAdded: () {
+                  onDayDataChanged();
+                });
+
           }
           break;
         }

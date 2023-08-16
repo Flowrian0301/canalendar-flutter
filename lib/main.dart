@@ -1,4 +1,5 @@
 import 'package:canalendar/pages/calendar_page.dart';
+import 'package:canalendar/pages/manager_page.dart';
 import 'package:canalendar/pages/map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -36,7 +37,7 @@ class CanalendarApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const CalendarPage(),
+      home: ManagerPage(),
     );
   }
 

@@ -1,17 +1,20 @@
 import 'dart:io';
 
+import 'package:canalendar/change_notifier_wrapper.dart';
 import 'package:canalendar/utils/string_util.dart';
 import 'package:canalendar/views/calendar_carousel.dart';
 import 'package:canalendar/views/calendar_day_bar.dart';
 import 'package:canalendar/views/calendar_header.dart';
 import 'package:canalendar/views/day_amounts.dart';
 import 'package:canalendar/views/month_amounts.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:canalendar/models/amounts.dart';
 import 'package:canalendar/models/persistency/save_data.dart';
 
 class CalendarView extends StatelessWidget {
+  static ValueNotifier<bool> lineDisplay = ValueNotifier(false);
   ValueNotifier<DateTime> selectedDate = ValueNotifier(DateTime.now());
   DateTime _firstOfMonth = DateTime.now();
   Function(DateTime date)? _onSelectedDateSet;
@@ -19,6 +22,7 @@ class CalendarView extends StatelessWidget {
   CalendarDayBar dayBar = CalendarDayBar();
   MonthAmounts monthAmountsView = MonthAmounts();
   DayAmounts dayAmountsView = DayAmounts();
+  final ChangeNotifierWrapper _onSelectedDayDataChangedNotifier = ChangeNotifierWrapper();
   final GlobalKey<CalendarCarouselState> _carouselKey = GlobalKey();
 
   CalendarView({super.key, this.onDateSelected}) {
@@ -41,7 +45,7 @@ class CalendarView extends StatelessWidget {
   }
 
   void updateDayDisplays() {
-    //_carouselKey.currentState?.updateSelectedCell();
+    _onSelectedDayDataChangedNotifier.notify();
     _updateSelectedDayAmounts();
   }
 
@@ -67,15 +71,26 @@ class CalendarView extends StatelessWidget {
 
   void _selectDate(DateTime date) {
     //_carouselKey.currentState?.updateSelectedDate(date, oldDate: CalendarView.selectedDate.value);
+    /*int newMonth = date.month;
+    int oldMonth = selectedDate.value.month;
+    if (newMonth > oldMonth) {
+      _carouselKey.currentState?.scrollToNext();
+    } else if (newMonth < oldMonth) {
+      _carouselKey.currentState?.scrollToPrevious();
+    }*/
     selectedDate.value = date;
-    print(selectedDate.value.toIso8601String());
     _onSelectedDateSet!(selectedDate.value);
     if (onDateSelected != null) onDateSelected!(selectedDate.value);
   }
 
   @override
   Widget build(BuildContext context) {
-    CalendarCarousel carousel = CalendarCarousel(key: _carouselKey, onSelectedDateSet: (date) => _selectDate(date), selectedDateNotifier: selectedDate,);
+    CalendarCarousel carousel = CalendarCarousel(
+      key: _carouselKey,
+      onSelectedDateSet: (date, isScrolling) => _selectDate(date),
+      selectedDateNotifier: selectedDate,
+      onSelectedDayDataChangedNotifier: _onSelectedDayDataChangedNotifier,
+    );
 
     Widget header = InkWell(
       child: Column(
@@ -92,44 +107,45 @@ class CalendarView extends StatelessWidget {
       ),
     );
 
-    bool isMobile = Platform.isAndroid || Platform.isIOS;
+    bool useBtnsInHeader = kIsWeb ? true
+        : !(defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
 
-    Widget platformSpecificHeader = isMobile
-    ? header
-    : LayoutBuilder(
+    Widget platformSpecificHeader = useBtnsInHeader
+    ? LayoutBuilder(
         builder: (context, constraints) {
           double maxWidth = constraints.maxWidth > 400 ? 400 : constraints
               .maxWidth;
           return ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: maxWidth,
-            ),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () => _carouselKey.currentState?.scrollToPrevious(),
-                  icon: Icon(
-                      Platform.isWindows
-                          ? Icons.arrow_back
-                          : Icons.arrow_back_ios
+              constraints: BoxConstraints(
+                maxWidth: maxWidth,
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () => _carouselKey.currentState?.scrollToPrevious(),
+                      icon: Icon(
+                          defaultTargetPlatform == TargetPlatform.windows
+                              ? Icons.arrow_back
+                              : Icons.arrow_back_ios
+                      )
+                  ),
+                  Expanded(
+                      child: header
+                  ),
+                  IconButton(
+                      onPressed: () => _carouselKey.currentState?.scrollToNext(),
+                      icon: Icon(
+                          defaultTargetPlatform == TargetPlatform.windows
+                              ? Icons.arrow_forward
+                              : Icons.arrow_forward_ios
+                      )
                   )
-                ),
-                Expanded(
-                  child: header
-                ),
-                IconButton(
-                    onPressed: () => _carouselKey.currentState?.scrollToNext(),
-                  icon: Icon(
-                      Platform.isWindows
-                          ? Icons.arrow_forward
-                          : Icons.arrow_forward_ios
-                  )
-                )
-              ],
-            )
+                ],
+              )
           );
         }
-    );
+    )
+    : header;
     return Column(
       children: [
         SizedBox(
@@ -142,6 +158,9 @@ class CalendarView extends StatelessWidget {
           child: Column(
             children: [
               carousel,
+              const SizedBox(
+                height: 8,
+              ),
               dayBar,
               Row(
                 children: [
